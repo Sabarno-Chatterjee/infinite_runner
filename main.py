@@ -28,9 +28,15 @@ running = True
 while running:
     timer.tick(fps)
     screen.fill(background)
+    floor = pygame.draw.rect(screen, "white", [0, 220, WIDTH, 5])
+    player = pygame.draw.rect(screen, "white", [player_x, player_y, 20, 19])
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    pygame.display.flip()
+pygame.quit()
+
 
 
 
