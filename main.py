@@ -5,11 +5,13 @@ pygame.init()
 
 # GAME CONSTANTS(IN RGB):
 GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+ORANGE = (255, 165, 0)
+YELLOW = (255, 255, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 WIDTH = 450
 HEIGHT = 300
-
 
 # GAME VARIABLES:
 score = 0
@@ -18,21 +20,29 @@ player_y = 200
 y_change = 0
 x_change = 0
 gravity = 1
+obstacles = [300, 450, 600]
+obstacle_speed = 2
+
 
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption("Infinite Runner")
-background = "black"
+background = BLACK
 fps = 60
 font = pygame.font.Font('freesansbold.ttf', 16)
 timer = pygame.time.Clock()
 
 running = True
+active = True
 
 while running:
     timer.tick(fps)
     screen.fill(background)
     floor = pygame.draw.rect(screen, "white", [0, 220, WIDTH, 5])
-    player = pygame.draw.rect(screen, "green", [player_x, player_y, 20, 20])
+    player = pygame.draw.rect(screen, GREEN, [player_x, player_y, 20, 20])
+    obstacle0 = pygame.draw.rect(screen, ORANGE, [obstacles[0], 200, 20, 20])
+    obstacle1 = pygame.draw.rect(screen, RED, [obstacles[1], 200, 20, 20])
+    obstacle2 = pygame.draw.rect(screen, YELLOW, [obstacle1[2], 200, 20, 20])
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -48,6 +58,11 @@ while running:
                 x_change = 0
             if event.key == pygame.K_RIGHT:
                 x_change = 0
+    for obstacle in range(len(obstacles)):
+        if active:
+            obstacles[obstacle] -= obstacle_speed
+            if obstacles[obstacle] < -20:
+                obstacles[obstacle] = random.randint(470, 570)
 
     if 0 <= player_x <= 430:
         player_x += x_change
@@ -55,7 +70,6 @@ while running:
         player_x = 0
     if player_x > 430:
         player_x = 430
-
 
     if y_change > 0 or player_y < 200:
         player_y -= y_change
@@ -67,9 +81,3 @@ while running:
 
     pygame.display.flip()
 pygame.quit()
-
-
-
-
-
-
