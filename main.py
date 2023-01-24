@@ -23,7 +23,6 @@ gravity = 1
 obstacles = [300, 450, 600]
 obstacle_speed = 2
 
-
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption("Infinite Runner")
 background = BLACK
@@ -37,8 +36,13 @@ active = True
 while running:
     timer.tick(fps)
     screen.fill(background)
+    if not active:
+        instruction_text1 = font.render(f"Space Bar To Start", True, WHITE, BLACK)
+        screen.blit(instruction_text1, (150, 50))
+        instruction_text2 = font.render(f"Space Bar Jumps. Left/Right Moves", True, WHITE, BLACK)
+        screen.blit(instruction_text2, (80, 90))
     score_text = font.render(f"Score: {score}", True, WHITE, BLACK)
-    screen.blit(score_text, (160,250))
+    screen.blit(score_text, (160, 250))
     floor = pygame.draw.rect(screen, "white", [0, 220, WIDTH, 5])
     player = pygame.draw.rect(screen, GREEN, [player_x, player_y, 20, 20])
     obstacle0 = pygame.draw.rect(screen, ORANGE, [obstacles[0], 200, 20, 20])
@@ -48,7 +52,13 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN and not active:
+            if event.key == pygame.K_SPACE:
+                active = True
+                player_x = 50
+                score = 0
+                obstacles = [300, 450, 600]
+        if event.type == pygame.KEYDOWN and active:
             if event.key == pygame.K_SPACE and y_change == 0:
                 y_change = 18
             if event.key == pygame.K_LEFT:
@@ -68,7 +78,6 @@ while running:
                 score += 1
             if player.colliderect(obstacle0) or player.colliderect(obstacle1) or player.colliderect(obstacle2):
                 active = False
-
 
     if 0 <= player_x <= 430:
         player_x += x_change
