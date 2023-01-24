@@ -37,11 +37,13 @@ active = True
 while running:
     timer.tick(fps)
     screen.fill(background)
+    score_text = font.render(f"Score: {score}", True, WHITE, BLACK)
+    screen.blit(score_text, (160,250))
     floor = pygame.draw.rect(screen, "white", [0, 220, WIDTH, 5])
     player = pygame.draw.rect(screen, GREEN, [player_x, player_y, 20, 20])
     obstacle0 = pygame.draw.rect(screen, ORANGE, [obstacles[0], 200, 20, 20])
     obstacle1 = pygame.draw.rect(screen, RED, [obstacles[1], 200, 20, 20])
-    obstacle2 = pygame.draw.rect(screen, YELLOW, [obstacle1[2], 200, 20, 20])
+    obstacle2 = pygame.draw.rect(screen, YELLOW, [obstacles[2], 200, 20, 20])
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -63,6 +65,10 @@ while running:
             obstacles[obstacle] -= obstacle_speed
             if obstacles[obstacle] < -20:
                 obstacles[obstacle] = random.randint(470, 570)
+                score += 1
+            if player.colliderect(obstacle0) or player.colliderect(obstacle1) or player.colliderect(obstacle2):
+                active = False
+
 
     if 0 <= player_x <= 430:
         player_x += x_change
