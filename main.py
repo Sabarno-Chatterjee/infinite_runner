@@ -15,6 +15,8 @@ HEIGHT = 300
 score = 0
 player_x = 50
 player_y = 200
+y_change = 0
+gravity = 1
 
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption("Infinite Runner")
@@ -29,10 +31,21 @@ while running:
     timer.tick(fps)
     screen.fill(background)
     floor = pygame.draw.rect(screen, "white", [0, 220, WIDTH, 5])
-    player = pygame.draw.rect(screen, "white", [player_x, player_y, 20, 19])
+    player = pygame.draw.rect(screen, "green", [player_x, player_y, 20, 20])
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and y_change == 0:
+                y_change = 18
+
+    if y_change > 0 or player_y < 200:
+        player_y -= y_change
+        y_change -= gravity
+    if player_y > 200:
+        player_y = 200
+    if player_y == 200 and y_change < 0:
+        y_change = 0
 
     pygame.display.flip()
 pygame.quit()
