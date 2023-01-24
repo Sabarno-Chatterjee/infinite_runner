@@ -15,6 +15,8 @@ HEIGHT = 300
 
 # GAME VARIABLES:
 score = 0
+with open("high_score.txt") as game_data:
+    high_score = game_data.read()
 player_x = 50
 player_y = 200
 y_change = 0
@@ -42,7 +44,9 @@ while running:
         instruction_text2 = font.render(f"Space Bar Jumps. Left/Right Moves", True, WHITE, BLACK)
         screen.blit(instruction_text2, (80, 90))
     score_text = font.render(f"Score: {score}", True, WHITE, BLACK)
-    screen.blit(score_text, (160, 250))
+    screen.blit(score_text, (100, 250))
+    high_score_text = font.render(f"High Score: {high_score}", True, WHITE, BLACK)
+    screen.blit(high_score_text, (250,250))
     floor = pygame.draw.rect(screen, "white", [0, 220, WIDTH, 5])
     player = pygame.draw.rect(screen, GREEN, [player_x, player_y, 20, 20])
     obstacle0 = pygame.draw.rect(screen, ORANGE, [obstacles[0], 200, 20, 20])
@@ -76,8 +80,13 @@ while running:
             if obstacles[obstacle] < -20:
                 obstacles[obstacle] = random.randint(470, 570)
                 score += 1
+                # Check for high_Score and collision with obstacle:
             if player.colliderect(obstacle0) or player.colliderect(obstacle1) or player.colliderect(obstacle2):
                 active = False
+                if score > int(high_score):
+                    high_score = score
+                    with open("high_score.txt", mode="w") as game_data:
+                        game_data.write(str(high_score))
 
     if 0 <= player_x <= 430:
         player_x += x_change
